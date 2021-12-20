@@ -71,6 +71,9 @@
             -webkit-user-select: none;
             user-select: none;
         }
+        .slider {
+            user-select: none;
+        }
 
         .slider-move .slider-move-btn {
             transform: translate(0px, 0px);
@@ -141,11 +144,17 @@
     });
 
     function move(event) {
-        const moveX = event.pageX - start;
-        if (moveX > 0 && moveX <= end) {
-            $(".slider-move-btn").css("transform", "translate(" + moveX + "px, 0px)")
-            $(".slider-img-div").css("transform", "translate(" + moveX + "px, 0px)")
+        let moveX = event.pageX - start;
+        console.log(moveX)
+        if (moveX < 0) {
+            moveX = 0;
+        } else if (moveX > end) {
+            moveX = end;
         }
+        // if (moveX > 0 && moveX <= end) {
+        $(".slider-move-btn").css("transform", "translate(" + moveX + "px, 0px)")
+        $(".slider-img-div").css("transform", "translate(" + moveX + "px, 0px)")
+        // }
         movePercent = moveX / bgImgWidth;
     }
 
