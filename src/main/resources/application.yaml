@@ -6,3 +6,9 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     mode: HTML #LEGACYHTML5
+captcha:
+  slider:
+    period: 5000
+    expire: 10000
+    cache-size: 20
+    wait-time: 1000
