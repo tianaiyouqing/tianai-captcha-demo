@@ -53,6 +53,7 @@ public class TianaiCaptchaDemoApplication {
         boolean matching = sliderCaptchaApplication.matching(id, percentage);
         stopWatch.stop();
         log.info("[校验验证码], IP={}, id={},percentage={},耗时={}ms", IPUtils.getIpAddr(request), id, percentage, stopWatch.getTotalTimeMillis());
+        System.out.println("id=" + id + ",percentage=" + percentage);
         return matching;
     }
 
