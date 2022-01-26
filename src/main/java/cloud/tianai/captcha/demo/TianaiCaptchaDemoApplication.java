@@ -25,7 +25,6 @@ public class TianaiCaptchaDemoApplication {
     @Autowired
     private SliderCaptchaApplication sliderCaptchaApplication;
 
-
     @GetMapping("/index")
     public String index() {
         return "index";
@@ -34,12 +33,7 @@ public class TianaiCaptchaDemoApplication {
     @GetMapping("/gen")
     @ResponseBody
     public CaptchaResponse<SliderCaptchaVO> genCaptcha(HttpServletRequest request) {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
         CaptchaResponse<SliderCaptchaVO> response = sliderCaptchaApplication.generateSliderCaptcha();
-        stopWatch.stop();
-        // 打点日志记录
-        log.info("[生成验证码], IP={}, id={}, 耗时={}ms", IPUtils.getIpAddr(request), response.getId(), stopWatch.getTotalTimeMillis());
         return response;
     }
 
@@ -48,13 +42,7 @@ public class TianaiCaptchaDemoApplication {
     public boolean checkCaptcha(@RequestParam("id") String id,
                                 @RequestParam("percentage") Float percentage,
                                 HttpServletRequest request) {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        boolean matching = sliderCaptchaApplication.matching(id, percentage);
-        stopWatch.stop();
-        log.info("[校验验证码], IP={}, id={},percentage={},耗时={}ms", IPUtils.getIpAddr(request), id, percentage, stopWatch.getTotalTimeMillis());
-        System.out.println("id=" + id + ",percentage=" + percentage);
-        return matching;
+        return sliderCaptchaApplication.matching(id, percentage);
     }
 
 
