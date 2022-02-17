@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cloud.tianai.captcha.template.slider.DefaultSliderCaptchaTemplate.DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH;
+import static cloud.tianai.captcha.template.slider.StandardSliderCaptchaTemplate.DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH;
 
 @Component
 public class ApplicationStartedListener implements ApplicationListener<ApplicationStartedEvent> {

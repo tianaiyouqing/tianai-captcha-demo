@@ -12,3 +12,4 @@ captcha:
     expire: 10000
     cache-size: 20
     wait-time: 1000
+    obfuscate: true
