@@ -25,9 +25,13 @@
             position: relative;
         }
 
-        .bg-img-div,
-        .slider-img-div {
+        .bg-img-div {
             width: 100%;
+            height: 100%;
+            position: absolute;
+            transform: translate(0px, 0px);
+        }
+        .slider-img-div {
             height: 100%;
             position: absolute;
             transform: translate(0px, 0px);
@@ -135,7 +139,7 @@
     let startY = 0;
     let currentCaptchaId = null;
     let movePercent = 0;
-    const bgImgWidth = $(".slider-img-div").width();
+    const bgImgWidth = $(".bg-img-div").width();
     let end = 206;
     let startSlidingTime;
     let entSlidingTime;
