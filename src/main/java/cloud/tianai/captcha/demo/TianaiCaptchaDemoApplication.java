@@ -1,7 +1,8 @@
 package cloud.tianai.captcha.demo;
 
+import cloud.tianai.captcha.plugins.secondary.SecondaryVerificationApplication;
 import cloud.tianai.captcha.slider.SliderCaptchaApplication;
-import cloud.tianai.captcha.template.slider.validator.SliderCaptchaTrack;
+import cloud.tianai.captcha.template.slider.validator.common.model.dto.SliderCaptchaTrack;
 import cloud.tianai.captcha.vo.CaptchaResponse;
 import cloud.tianai.captcha.vo.SliderCaptchaVO;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,21 @@ public class TianaiCaptchaDemoApplication {
                                 @RequestBody SliderCaptchaTrack sliderCaptchaTrack,
                                 HttpServletRequest request) {
         return sliderCaptchaApplication.matching(id, sliderCaptchaTrack);
+    }
+
+    /**
+     * 二次验证，一般用于机器内部调用，这里为了方便测试
+     * @param id id
+     * @return boolean
+     */
+    @GetMapping("/check2")
+    @ResponseBody
+    public boolean check2Captcha(@RequestParam("id") String id) {
+        // 如果开启了二次验证
+        if (sliderCaptchaApplication instanceof SecondaryVerificationApplication) {
+            return ((SecondaryVerificationApplication)sliderCaptchaApplication).secondaryVerification(id);
+        }
+        return false;
     }
 
 

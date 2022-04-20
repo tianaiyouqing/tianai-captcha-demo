@@ -1,9 +1,9 @@
 package cloud.tianai.captcha.demo;
 
 import cloud.tianai.captcha.slider.SliderCaptchaApplication;
-import cloud.tianai.captcha.template.slider.Resource;
-import cloud.tianai.captcha.template.slider.ResourceStore;
-import cloud.tianai.captcha.template.slider.SliderCaptchaResourceManager;
+import cloud.tianai.captcha.template.slider.resource.ResourceStore;
+import cloud.tianai.captcha.template.slider.resource.SliderCaptchaResourceManager;
+import cloud.tianai.captcha.template.slider.resource.common.model.dto.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
