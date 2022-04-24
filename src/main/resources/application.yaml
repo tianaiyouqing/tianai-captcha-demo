@@ -8,7 +8,7 @@ spring:
     mode: HTML #LEGACYHTML5
 captcha:
   slider:
-    expire: 10000
+    expire: 100000
     obfuscate: false
     cache:
       enabled: true

@@ -2,10 +2,12 @@ package cloud.tianai.captcha.demo;
 
 import cloud.tianai.captcha.plugins.secondary.SecondaryVerificationApplication;
 import cloud.tianai.captcha.slider.SliderCaptchaApplication;
+import cloud.tianai.captcha.template.slider.generator.common.constant.CaptchaTypeConstant;
 import cloud.tianai.captcha.template.slider.validator.common.model.dto.SliderCaptchaTrack;
 import cloud.tianai.captcha.vo.CaptchaResponse;
 import cloud.tianai.captcha.vo.SliderCaptchaVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,8 +33,11 @@ public class TianaiCaptchaDemoApplication {
 
     @GetMapping("/gen")
     @ResponseBody
-    public CaptchaResponse<SliderCaptchaVO> genCaptcha(HttpServletRequest request) {
-        CaptchaResponse<SliderCaptchaVO> response = sliderCaptchaApplication.generateSliderCaptcha();
+    public CaptchaResponse<SliderCaptchaVO> genCaptcha(HttpServletRequest request, @RequestParam(value = "type", required = false)String type) {
+        if (StringUtils.isBlank(type)) {
+            type = CaptchaTypeConstant.SLIDER;
+        }
+        CaptchaResponse<SliderCaptchaVO> response = sliderCaptchaApplication.generateSliderCaptcha(type);
         return response;
     }
 

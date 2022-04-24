@@ -107,6 +107,17 @@
         .after {
             color: #88949d;
         }
+
+
+        .rotate-img-div  {
+            height: 100%;
+            position: absolute;
+            transform: rotate(0deg);
+            margin-left: 50px;
+        }
+        .rotate-img-div img {
+            height: 100%;
+        }
     </style>
 </head>
 
@@ -116,7 +127,7 @@
         <div class="bg-img-div">
             <img id="bg-img" src="" alt/>
         </div>
-        <div class="slider-img-div">
+        <div class="slider-img-div" id="slider-img-div">
             <img id="slider-img" src="" alt/>
         </div>
     </div>
@@ -124,14 +135,33 @@
         <div class="slider-move-track">
             拖动滑块完成拼图
         </div>
-        <div class="slider-move-btn"></div>
+        <div class="slider-move-btn"  id="slider-move-btn"></div>
     </div>
     <div class="bottom">
-        <div class="close-btn"></div>
-        <div class="refresh-btn"></div>
+        <div class="close-btn" id="slider-close-btn"></div>
+        <div class="refresh-btn" id="slider-refresh-btn"></div>
     </div>
 </div>
-
+<div class="slider rotate">
+    <div class="content">
+        <div class="bg-img-div">
+            <img id="rotate-bg-img" src="" alt/>
+        </div>
+        <div class="rotate-img-div">
+            <img id="rotate-image" src="" alt/>
+        </div>
+    </div>
+    <div class="slider-move">
+        <div class="slider-move-track">
+            拖动滑块完成拼图
+        </div>
+        <div class="slider-move-btn" id="rotate-move-btn"></div>
+    </div>
+    <div class="bottom">
+        <div class="close-btn" id="rotate-close-btn"></div>
+        <div class="refresh-btn" id="rotate-refresh-btn"></div>
+    </div>
+</div>
 <script>
     let start = 0;
     let startY = 0;
@@ -144,19 +174,20 @@
     const trackArr = [];
     $(function () {
         refreshCaptcha();
+        refreshRotateCaptcha();
     })
 
-    $(".slider-move-btn").mousedown((event) => {
+    $("#slider-move-btn").mousedown((event) => {
         console.log("bb")
         startSlidingTime = new Date();
         start = event.pageX;
         startY = event.pageY;
-        $(".slider-move-btn").css("background-position", "-5px 31.0092%")
+        $("#slider-move-btn").css("background-position", "-5px 31.0092%")
         window.addEventListener("mousemove", move);
         window.addEventListener("mouseup", up);
     });
 
-    $(".slider-move-btn").on("touchstart",(event) => {
+    $("#slider-move-btn").on("touchstart",(event) => {
         console.log("aa")
         startSlidingTime = new Date();
         start = event.pageX;
@@ -165,7 +196,7 @@
             start = event.originalEvent.targetTouches[0].pageX
             startY = event.originalEvent.targetTouches[0].pageY;
         }
-        $(".slider-move-btn").css("background-position", "-5px 31.0092%")
+        $("#slider-move-btn").css("background-position", "-5px 31.0092%")
         window.addEventListener("touchmove", move);
         window.addEventListener("touchend", up);
     });
@@ -185,8 +216,8 @@
             moveX = end;
         }
         // if (moveX > 0 && moveX <= end) {
-        $(".slider-move-btn").css("transform", "translate(" + moveX + "px, 0px)")
-        $(".slider-img-div").css("transform", "translate(" + moveX + "px, 0px)")
+        $("#slider-move-btn").css("transform", "translate(" + moveX + "px, 0px)")
+        $("#slider-img-div").css("transform", "translate(" + moveX + "px, 0px)")
         // }
         movePercent = moveX / bgImgWidth;
     }
@@ -200,11 +231,11 @@
     }
 
 
-    $(".close").click(() => {
+    $("#slider-close-btn").click(() => {
 
     });
 
-    $(".refresh-btn").click(() => {
+    $("#slider-refresh-btn").click(() => {
         refreshCaptcha();
     });
 
@@ -253,9 +284,9 @@
     }
 
     function reset() {
-        $(".slider-move-btn").css("background-position", "-5px 11.79625%")
-        $(".slider-move-btn").css("transform", "translate(0px, 0px)")
-        $(".slider-img-div").css("transform", "translate(0px, 0px)")
+        $("#slider-move-btn").css("background-position", "-5px 11.79625%")
+        $("#slider-move-btn").css("transform", "translate(0px, 0px)")
+        $("#slider-img-div").css("transform", "translate(0px, 0px)")
         start = 0;
         startSlidingTime = null;
         entSlidingTime = null;
@@ -263,6 +294,139 @@
         movePercent = 0;
         currentCaptchaId = null;
         startY = 0;
+    }
+
+
+    // =========== 旋转
+    let rotateStart = 0;
+    let rotateStartY = 0;
+    let rotateCurrentCaptchaId = null;
+    let rotateMovePercent = 0;
+    const rotateBgImgWidth = $(".bg-img-div").width();
+    let rotateEnd = 206;
+    let rotateStartSlidingTime;
+    let rotateEntSlidingTime;
+    const rotateTrackArr = [];
+    function refreshRotateCaptcha() {
+        $.get("/gen?type=ROTATE", function (data) {
+            rotateReset();
+            rotateCurrentCaptchaId = data.id;
+            $("#rotate-bg-img").attr("src", data.captcha.backgroundImage);
+            $("#rotate-image").attr("src", data.captcha.sliderImage);
+        })
+    }
+
+    $("#rotate-move-btn").mousedown((event) => {
+        console.log("bb")
+        rotateStartSlidingTime = new Date();
+        rotateStart = event.pageX;
+        rotateStartY = event.pageY;
+        $("#rotate-move-btn").css("background-position", "-5px 31.0092%")
+        window.addEventListener("mousemove", rotateMove);
+        window.addEventListener("mouseup", rotateUp);
+    });
+
+    $("#rotate-move-btn").on("touchstart",(event) => {
+        console.log("aa")
+        rotateStartSlidingTime = new Date();
+        rotateStart = event.pageX;
+        rotateStartY = event.pageY;
+        if (rotateStart === undefined) {
+            rotateStart = event.originalEvent.targetTouches[0].pageX
+            rotateStartY = event.originalEvent.targetTouches[0].pageY;
+        }
+        $("#rotate-move-btn").css("background-position", "-5px 31.0092%")
+        window.addEventListener("touchmove", rotateMove);
+        window.addEventListener("touchend", rotateUp);
+    });
+
+    function rotateMove(event) {
+        if (event instanceof TouchEvent) {
+            event = event.touches[0];
+        }
+        let moveX = event.pageX - rotateStart;
+        let pageX = event.pageX;
+        let pageY = event.pageY;
+        console.log("x:", pageX- rotateStart, "y:", pageY, "time:" ,new Date().getTime() - rotateStartSlidingTime.getTime());
+        rotateTrackArr.push({x: pageX - rotateStart, y:pageY - rotateStartY, t: (new Date().getTime() - rotateStartSlidingTime.getTime())});
+        console.log("deg", moveX /(rotateEnd / 360))
+        if (moveX < 0) {
+            moveX = 0;
+        } else if (moveX > rotateEnd) {
+            moveX = rotateEnd;
+        }
+        // if (moveX > 0 && moveX <= end) {
+        $("#rotate-move-btn").css("transform", "translate(" + moveX + "px, 0px)")
+        $(".rotate-img-div").css("transform", "rotate("+(moveX /(rotateEnd / 360))+"deg)")
+        // }
+        rotateMovePercent = moveX / rotateBgImgWidth;
+    }
+
+    function rotateUp(event) {
+        rotateEntSlidingTime = new Date();
+        console.log(rotateCurrentCaptchaId, rotateMovePercent, rotateBgImgWidth);
+        window.removeEventListener("mousemove", rotateMove);
+        window.removeEventListener("mouseup", rotateUp);
+        rotateValid();
+    }
+
+    function rotateValid() {
+
+        console.log("=======================")
+        console.log("startTime", rotateStartSlidingTime);
+        console.log("endTime", rotateEntSlidingTime);
+        console.log("track", JSON.stringify(rotateTrackArr));
+
+
+        let data = {
+            bgImageWidth: rotateEnd,
+            bgImageHeight: rotateEnd,
+            sliderImageWidth: $(".rotate-img-div").width(),
+            sliderImageHeight: $(".rotate-img-div").height(),
+            startSlidingTime: rotateStartSlidingTime,
+            entSlidingTime: rotateEntSlidingTime,
+            trackList: rotateTrackArr
+        };
+
+        $.ajax({
+            type:"POST",
+            url:"/check?id=" + rotateCurrentCaptchaId,
+            contentType: "application/json", //必须这样写
+            dataType:"json",
+            data:JSON.stringify(data),//schoolList是你要提交是json字符串
+            success:function (res) {
+                console.log(res);
+                if (res) {
+                    alert("验证成功!!!");
+                }
+                refreshRotateCaptcha();
+            },
+            error:function () {
+                refreshRotateCaptcha();
+            }
+
+        })
+    }
+
+    $("#slider-close-btn").click(() => {
+
+    });
+
+    $("#rotate-refresh-btn").click(() => {
+        refreshRotateCaptcha();
+    });
+
+    function rotateReset() {
+        $("#rotate-move-btn").css("background-position", "-5px 11.79625%")
+        $("#rotate-move-btn").css("transform", "translate(0px, 0px)")
+        $(".rotate-img-div").css("transform", "rotate(0deg)")
+        rotateStart = 0;
+        rotateStartSlidingTime = null;
+        rotateEntSlidingTime = null;
+        rotateTrackArr.length = 0;
+        rotateMovePercent = 0;
+        rotateCurrentCaptchaId = null;
+        rotateStartY = 0;
     }
 </script>
 </body>
