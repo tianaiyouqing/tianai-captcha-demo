@@ -189,12 +189,13 @@
 
     $("#slider-move-btn").on("touchstart",(event) => {
         console.log("aa")
+        let targetTouches = event.originalEvent ? event.originalEvent.targetTouches : event.targetTouches;
         startSlidingTime = new Date();
         start = event.pageX;
         startY = event.pageY;
         if (start === undefined) {
-            start = event.originalEvent.targetTouches[0].pageX
-            startY = event.originalEvent.targetTouches[0].pageY;
+            start = targetTouches[0].pageX
+            startY = targetTouches[0].pageY;
         }
         $("#slider-move-btn").css("background-position", "-5px 31.0092%")
         window.addEventListener("touchmove", move);
