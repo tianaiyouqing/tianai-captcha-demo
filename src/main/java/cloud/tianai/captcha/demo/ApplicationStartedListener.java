@@ -1,7 +1,7 @@
 package cloud.tianai.captcha.demo;
 
 import cloud.tianai.captcha.slider.SliderCaptchaApplication;
-import cloud.tianai.captcha.template.slider.generator.common.constant.CaptchaTypeConstant;
+import cloud.tianai.captcha.template.slider.common.constant.CaptchaTypeConstant;
 import cloud.tianai.captcha.template.slider.resource.ImageCaptchaResourceManager;
 import cloud.tianai.captcha.template.slider.resource.ResourceStore;
 import cloud.tianai.captcha.template.slider.resource.common.model.dto.Resource;
