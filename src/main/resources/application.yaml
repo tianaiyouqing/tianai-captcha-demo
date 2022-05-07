@@ -7,11 +7,12 @@ spring:
     suffix: .html
     mode: HTML #LEGACYHTML5
 captcha:
-  slider:
-    expire: 100000
-    obfuscate: false
-    cache:
-      enabled: true
-      cache-size: 20
-    secondary:
-      enabled: true
+  expire:
+    default: 10000
+    # 文字点选验证码 过期时间设置大一点
+    WORD_IMAGE_CLICK: 60000
+  cache:
+    enabled: true
+    cache-size: 20
+  secondary:
+    enabled: false
