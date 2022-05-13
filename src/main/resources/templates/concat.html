@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="js/base64.js"></script>
+    <script src="js/index.js"></script>
     <style>
         .slider {
             background-color: #fff;
@@ -139,73 +141,24 @@
     </div>
 </div>
 <script>
-    let start = 0;
-    let startY = 0;
-    let currentCaptchaId = null;
-    let movePercent = 0;
-    const bgImgWidth = $(".bg-img-div").width();
-    let end = 206;
-    let startSlidingTime;
-    let entSlidingTime;
-    const trackArr = [];
+    var currentCaptchaId;
     $(function () {
         refreshCaptcha();
+        clearAllPreventDefault($(".slider"));
     })
 
-    $("#slider-move-btn").mousedown((event) => {
-        console.log("bb")
-        startSlidingTime = new Date();
-        start = event.pageX;
-        startY = event.pageY;
-        $("#slider-move-btn").css("background-position", "-5px 31.0092%")
-        window.addEventListener("mousemove", move);
-        window.addEventListener("mouseup", up);
-    });
+    $("#slider-move-btn").mousedown(down);
+    $("#slider-move-btn").on("touchstart", down);
 
-    $("#slider-move-btn").on("touchstart", (event) => {
-        console.log("aa")
-        let targetTouches = event.originalEvent ? event.originalEvent.targetTouches : event.targetTouches;
-        startSlidingTime = new Date();
-        start = event.pageX;
-        startY = event.pageY;
-        if (start === undefined) {
-            start = targetTouches[0].pageX
-            startY = targetTouches[0].pageY;
-        }
+    function doDown() {
         $("#slider-move-btn").css("background-position", "-5px 31.0092%")
-        window.addEventListener("touchmove", move);
-        window.addEventListener("touchend", up);
-    });
+    }
 
-    function move(event) {
-        if (event instanceof TouchEvent) {
-            event = event.touches[0];
-        }
-        let moveX = event.pageX - start;
-        let pageX = event.pageX;
-        let pageY = event.pageY;
-        console.log("x:", pageX, "y:", pageY, "time:", new Date().getTime() - startSlidingTime.getTime());
-        trackArr.push({x: pageX - start, y: pageY - startY, t: (new Date().getTime() - startSlidingTime.getTime())});
-        if (moveX < 0) {
-            moveX = 0;
-        } else if (moveX > end) {
-            moveX = end;
-        }
-        // if (moveX > 0 && moveX <= end) {
+    function doMove(config) {
+        const moveX = config.moveX;
         $("#slider-move-btn").css("transform", "translate(" + moveX + "px, 0px)")
         $("#slider-img-div").css("background-position-x", moveX + "px");
-        // }
-        movePercent = moveX / bgImgWidth;
     }
-
-    function up(event) {
-        entSlidingTime = new Date();
-        console.log(currentCaptchaId, movePercent, bgImgWidth);
-        window.removeEventListener("mousemove", move);
-        window.removeEventListener("mouseup", up);
-        valid();
-    }
-
 
     $("#slider-close-btn").click(() => {
 
@@ -215,31 +168,23 @@
         refreshCaptcha();
     });
 
-    function valid() {
-
-        console.log("=======================")
-        console.log("startTime", startSlidingTime);
-        console.log("endTime", entSlidingTime);
-        console.log("track", JSON.stringify(trackArr));
-
-
+    function valid(captchaConfig) {
         let data = {
-            bgImageWidth: bgImgWidth,
-            bgImageHeight: $(".slider-img-div").height(),
-            sliderImageWidth: $(".slider-img-div").width(),
-            sliderImageHeight: $(".slider-img-div").height(),
-            startSlidingTime: startSlidingTime,
-            entSlidingTime: entSlidingTime,
-            trackList: trackArr
+            bgImageWidth: captchaConfig.bgImageWidth,
+            bgImageHeight: captchaConfig.bgImageHeight,
+            sliderImageWidth: captchaConfig.sliderImageWidth,
+            sliderImageHeight: captchaConfig.sliderImageHeight,
+            startSlidingTime: captchaConfig.startTime,
+            entSlidingTime: captchaConfig.stopTime,
+            trackList: captchaConfig.trackArr
         };
-
         $.ajax({
-            type: "POST",
-            url: "/check?id=" + currentCaptchaId,
+            type:"POST",
+            url:"/check?id=" + currentCaptchaId,
             contentType: "application/json", //必须这样写
-            dataType: "json",
-            data: JSON.stringify(data),//schoolList是你要提交是json字符串
-            success: function (res) {
+            dataType:"json",
+            data:JSON.stringify(data),//schoolList是你要提交是json字符串
+            success:function (res) {
                 console.log(res);
                 if (res) {
                     alert("验证成功!!!");
@@ -254,15 +199,17 @@
         $.get("/gen?type=CONCAT", function (data) {
             reset();
             currentCaptchaId = data.id;
-            $("#bg-img").attr("src", data.captcha.backgroundImage);
-            $("#slider-img").attr("src", data.captcha.sliderImage);
-            console.log(data.captcha.backgroundImage)
-            $(".bg-img-div").css("background-image", "url("+data.captcha.backgroundImage + ")");
-            $(".slider-img-div").css("background-image", "url("+data.captcha.backgroundImage + ")");
-            $(".slider-img-div").css("background-position", "0px 0px");
+            const bgImg = $(".bg-img-div");
+            const sliderImg = $(".slider-img-div");
+
+            bgImg.css("background-image", "url(" + data.captcha.backgroundImage + ")");
+            sliderImg.css("background-image", "url(" + data.captcha.backgroundImage + ")");
+            sliderImg.css("background-position", "0px 0px");
             var backgroundImageHeight = data.captcha.backgroundImageHeight;
             var height = ((backgroundImageHeight - data.captcha.data) / backgroundImageHeight) * 159;
             $(".slider-img-div").css("height", height);
+
+            initConfig(bgImg.width(), bgImg.height(), sliderImg.width(), sliderImg.height(), 206);
         })
     }
 
@@ -270,13 +217,7 @@
         $("#slider-move-btn").css("background-position", "-5px 11.79625%")
         $("#slider-move-btn").css("transform", "translate(0px, 0px)")
         $("#slider-img-div").css("transform", "translate(0px, 0px)")
-        start = 0;
-        startSlidingTime = null;
-        entSlidingTime = null;
-        trackArr.length = 0;
-        movePercent = 0;
         currentCaptchaId = null;
-        startY = 0;
     }
 </script>
 </body>

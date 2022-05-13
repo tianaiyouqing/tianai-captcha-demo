@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="js/index.js"></script>
     <style>
         .slider {
             background-color: #fff;
@@ -148,120 +149,62 @@
 </div>
 <script>
     $(function () {
-        refreshRotateCaptcha();
+        refreshCaptcha();
+        clearAllPreventDefault($(".slider"))
     })
 
     // =========== 旋转
-    let rotateStart = 0;
-    let rotateStartY = 0;
-    let rotateCurrentCaptchaId = null;
-    let rotateMovePercent = 0;
-    const rotateBgImgWidth = $(".bg-img-div").width();
-    let rotateEnd = 206;
-    let rotateStartSlidingTime;
-    let rotateEntSlidingTime;
-    const rotateTrackArr = [];
-
-    function refreshRotateCaptcha() {
+    let currentCaptchaId = null;
+    function refreshCaptcha() {
         $.get("/gen?type=ROTATE", function (data) {
-            rotateReset();
-            rotateCurrentCaptchaId = data.id;
-            $("#rotate-bg-img").attr("src", data.captcha.backgroundImage);
-            $("#rotate-image").attr("src", data.captcha.sliderImage);
+            reset();
+            currentCaptchaId = data.id;
+            const bgImg = $("#rotate-bg-img");
+            const sliderImg = $("#rotate-image");
+            bgImg.attr("src", data.captcha.backgroundImage);
+            sliderImg.attr("src", data.captcha.sliderImage);
+            initConfig(206, bgImg.height(), sliderImg.width(), sliderImg.height(), 206);
         })
     }
 
-    $("#rotate-move-btn").mousedown((event) => {
-        console.log("bb")
-        rotateStartSlidingTime = new Date();
-        rotateStart = event.pageX;
-        rotateStartY = event.pageY;
-        $("#rotate-move-btn").css("background-position", "-5px 31.0092%")
-        window.addEventListener("mousemove", rotateMove);
-        window.addEventListener("mouseup", rotateUp);
-    });
+    $("#rotate-move-btn").mousedown(down);
+    $("#rotate-move-btn").on("touchstart", down);
 
-    $("#rotate-move-btn").on("touchstart", (event) => {
-        console.log("aa")
-        rotateStartSlidingTime = new Date();
-        rotateStart = event.pageX;
-        rotateStartY = event.pageY;
-        if (rotateStart === undefined) {
-            rotateStart = event.originalEvent.targetTouches[0].pageX
-            rotateStartY = event.originalEvent.targetTouches[0].pageY;
-        }
-        $("#rotate-move-btn").css("background-position", "-5px 31.0092%")
-        window.addEventListener("touchmove", rotateMove);
-        window.addEventListener("touchend", rotateUp);
-    });
+    function doDown() {
+        $("#slider-move-btn").css("background-position", "-5px 31.0092%")
+    }
 
-    function rotateMove(event) {
-        if (event instanceof TouchEvent) {
-            event = event.touches[0];
-        }
-        let moveX = event.pageX - rotateStart;
-        let pageX = event.pageX;
-        let pageY = event.pageY;
-        console.log("x:", pageX - rotateStart, "y:", pageY, "time:", new Date().getTime() - rotateStartSlidingTime.getTime());
-        rotateTrackArr.push({
-            x: pageX - rotateStart,
-            y: pageY - rotateStartY,
-            t: (new Date().getTime() - rotateStartSlidingTime.getTime())
-        });
-        console.log("deg", moveX / (rotateEnd / 360))
-        if (moveX < 0) {
-            moveX = 0;
-        } else if (moveX > rotateEnd) {
-            moveX = rotateEnd;
-        }
-        // if (moveX > 0 && moveX <= end) {
+
+    function doMove(currentCaptchaConfig) {
+        const moveX = currentCaptchaConfig.moveX;
         $("#rotate-move-btn").css("transform", "translate(" + moveX + "px, 0px)")
-        $(".rotate-img-div").css("transform", "rotate(" + (moveX / (rotateEnd / 360)) + "deg)")
-        // }
-        rotateMovePercent = moveX / rotateBgImgWidth;
+        $(".rotate-img-div").css("transform", "rotate(" + (moveX / (currentCaptchaConfig.end / 360)) + "deg)")
     }
 
-    function rotateUp(event) {
-        rotateEntSlidingTime = new Date();
-        console.log(rotateCurrentCaptchaId, rotateMovePercent, rotateBgImgWidth);
-        window.removeEventListener("mousemove", rotateMove);
-        window.removeEventListener("mouseup", rotateUp);
-        rotateValid();
-    }
-
-    function rotateValid() {
-
-        console.log("=======================")
-        console.log("startTime", rotateStartSlidingTime);
-        console.log("endTime", rotateEntSlidingTime);
-        console.log("track", JSON.stringify(rotateTrackArr));
-
+    function valid(captchaConfig) {
 
         let data = {
-            bgImageWidth: rotateEnd,
-            bgImageHeight: rotateEnd,
-            sliderImageWidth: $(".rotate-img-div").width(),
-            sliderImageHeight: $(".rotate-img-div").height(),
-            startSlidingTime: rotateStartSlidingTime,
-            entSlidingTime: rotateEntSlidingTime,
-            trackList: rotateTrackArr
+            bgImageWidth: captchaConfig.bgImageWidth,
+            bgImageHeight: captchaConfig.bgImageHeight,
+            sliderImageWidth: captchaConfig.sliderImageWidth,
+            sliderImageHeight: captchaConfig.sliderImageHeight,
+            startSlidingTime: captchaConfig.startTime,
+            entSlidingTime: captchaConfig.stopTime,
+            trackList: captchaConfig.trackArr
         };
-
+        console.log("valid", captchaConfig, data);
         $.ajax({
-            type: "POST",
-            url: "/check?id=" + rotateCurrentCaptchaId,
+            type:"POST",
+            url:"/check?id=" + currentCaptchaId,
             contentType: "application/json", //必须这样写
-            dataType: "json",
-            data: JSON.stringify(data),//schoolList是你要提交是json字符串
-            success: function (res) {
+            dataType:"json",
+            data:JSON.stringify(data),//schoolList是你要提交是json字符串
+            success:function (res) {
                 console.log(res);
                 if (res) {
                     alert("验证成功!!!");
                 }
-                refreshRotateCaptcha();
-            },
-            error: function () {
-                refreshRotateCaptcha();
+                refreshCaptcha();
             }
 
         })
@@ -272,20 +215,14 @@
     });
 
     $("#rotate-refresh-btn").click(() => {
-        refreshRotateCaptcha();
+        refreshCaptcha();
     });
 
-    function rotateReset() {
+    function reset() {
         $("#rotate-move-btn").css("background-position", "-5px 11.79625%")
         $("#rotate-move-btn").css("transform", "translate(0px, 0px)")
         $(".rotate-img-div").css("transform", "rotate(0deg)")
-        rotateStart = 0;
-        rotateStartSlidingTime = null;
-        rotateEntSlidingTime = null;
-        rotateTrackArr.length = 0;
-        rotateMovePercent = 0;
-        rotateCurrentCaptchaId = null;
-        rotateStartY = 0;
+        currentCaptchaId = null;
     }
 </script>
 </body>
