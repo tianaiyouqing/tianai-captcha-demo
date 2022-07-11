@@ -16,3 +16,5 @@ captcha:
     cache-size: 20
   secondary:
     enabled: false
+  # 不初始化默认的资源文件
+  init-default-resource: false
