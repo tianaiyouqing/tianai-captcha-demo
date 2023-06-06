@@ -162,7 +162,7 @@
             const bgImg = $("#rotate-bg-img");
             const sliderImg = $("#rotate-image");
             bgImg.attr("src", data.captcha.backgroundImage);
-            sliderImg.attr("src", data.captcha.sliderImage);
+            sliderImg.attr("src", data.captcha.templateImage);
             initConfig(206, bgImg.height(), sliderImg.width(), sliderImg.height(), 206);
         })
     }
@@ -186,8 +186,8 @@
         let data = {
             bgImageWidth: captchaConfig.bgImageWidth,
             bgImageHeight: captchaConfig.bgImageHeight,
-            sliderImageWidth: captchaConfig.sliderImageWidth,
-            sliderImageHeight: captchaConfig.sliderImageHeight,
+            templateImageWidth: captchaConfig.templateImageWidth,
+            templateImageHeight: captchaConfig.templateImageHeight,
             startSlidingTime: captchaConfig.startTime,
             entSlidingTime: captchaConfig.stopTime,
             trackList: captchaConfig.trackArr

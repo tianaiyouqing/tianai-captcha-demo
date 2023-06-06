@@ -35,7 +35,7 @@ public class CaptchaController {
     public boolean checkCaptcha(@RequestParam("id") String id,
                                 @RequestBody ImageCaptchaTrack imageCaptchaTrack,
                                 HttpServletRequest request) {
-        return imageCaptchaApplication.matching(id, imageCaptchaTrack);
+        return imageCaptchaApplication.matching(id, imageCaptchaTrack).isSuccess();
     }
 
     /**

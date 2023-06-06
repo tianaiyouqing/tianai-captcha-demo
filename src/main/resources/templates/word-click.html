@@ -249,8 +249,8 @@
         let data = {
             bgImageWidth: $(".bg-img-div").width(),
             bgImageHeight: $(".content").height(),
-            sliderImageWidth: -1,
-            sliderImageHeight: -1,
+            templateImageWidth: -1,
+            templateImageHeight: -1,
             startSlidingTime: startSlidingTime,
             entSlidingTime: entSlidingTime,
             trackList: trackArr
@@ -280,8 +280,8 @@
             reset();
             currentCaptchaId = data.id;
             $("#bg-img").attr("src", data.captcha.backgroundImage);
-            $("#slider-img").attr("src", data.captcha.sliderImage);
-            $(".tip-img").attr("src", data.captcha.sliderImage);
+            $("#slider-img").attr("src", data.captcha.templateImage);
+            $(".tip-img").attr("src", data.captcha.templateImage);
         })
     }
 

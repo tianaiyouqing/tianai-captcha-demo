@@ -172,8 +172,8 @@
         let data = {
             bgImageWidth: captchaConfig.bgImageWidth,
             bgImageHeight: captchaConfig.bgImageHeight,
-            sliderImageWidth: captchaConfig.sliderImageWidth,
-            sliderImageHeight: captchaConfig.sliderImageHeight,
+            templaterImageWidth: captchaConfig.templateImageWidth,
+            templateImageHeight: captchaConfig.templateImageHeight,
             startSlidingTime: captchaConfig.startTime,
             entSlidingTime: captchaConfig.stopTime,
             trackList: captchaConfig.trackArr
@@ -206,7 +206,7 @@
             sliderImg.css("background-image", "url(" + data.captcha.backgroundImage + ")");
             sliderImg.css("background-position", "0px 0px");
             var backgroundImageHeight = data.captcha.backgroundImageHeight;
-            var height = ((backgroundImageHeight - data.captcha.data) / backgroundImageHeight) * 159;
+            var height = ((backgroundImageHeight - data.captcha.data.randomY) / backgroundImageHeight) * 159;
             $(".slider-img-div").css("height", height);
 
             initConfig(bgImg.width(), bgImg.height(), sliderImg.width(), sliderImg.height(), 206);
