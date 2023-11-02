@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
@@ -50,7 +51,11 @@ public class CaptchaController {
     @ResponseBody
     public ApiResponse<?> checkCaptcha(@RequestBody Data data,
                                     HttpServletRequest request) {
-        return imageCaptchaApplication.matching(data.getId(), data.getData());
+        ApiResponse<?> response = imageCaptchaApplication.matching(data.getId(), data.getData());
+        if (response.isSuccess()) {
+            return ApiResponse.ofSuccess(Collections.singletonMap("id", data.getId()));
+        }
+        return response;
     }
 
     @lombok.Data
