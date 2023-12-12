@@ -18,3 +18,7 @@ captcha:
     enabled: false
   # 不初始化默认的资源文件
   init-default-resource: false
+cors:
+  controlAllowHeaders: "*"
+  controlAllowMethods: "*"
+  controlAllowOrigin: "*"
