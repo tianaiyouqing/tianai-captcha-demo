@@ -61,6 +61,7 @@
     <div id="captcha-box"></div>
 </div>
 <script>
+    let globalTAC;
     const config = {
         // 生成接口
         requestCaptchaDataUrl: "/gen?type=RANDOM",
@@ -88,11 +89,14 @@
     }
     $(function () {
         // 创建 TAC 启动验证码服务
-        new TAC(config, style).init();
+        globalTAC = new TAC(config, style).init();
     })
     function openCaptcha(type) {
+        if (globalTAC) {
+            globalTAC.destroyWindow();
+        }
         config.requestCaptchaDataUrl = "/gen?type="+type
-        new TAC(config, style).init();
+        globalTAC = new TAC(config, style).init();
     }
 </script>
 </body>
