@@ -1,12 +1,12 @@
 package cloud.tianai.captcha.demo;
 
 
+import cloud.tianai.captcha.application.ImageCaptchaApplication;
+import cloud.tianai.captcha.application.vo.CaptchaResponse;
+import cloud.tianai.captcha.application.vo.ImageCaptchaVO;
 import cloud.tianai.captcha.common.constant.CaptchaTypeConstant;
 import cloud.tianai.captcha.common.response.ApiResponse;
-import cloud.tianai.captcha.spring.application.ImageCaptchaApplication;
 import cloud.tianai.captcha.spring.plugins.secondary.SecondaryVerificationApplication;
-import cloud.tianai.captcha.spring.vo.CaptchaResponse;
-import cloud.tianai.captcha.spring.vo.ImageCaptchaVO;
 import cloud.tianai.captcha.validator.common.model.dto.ImageCaptchaTrack;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;

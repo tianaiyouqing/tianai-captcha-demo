@@ -1,15 +1,16 @@
 package cloud.tianai.captcha.demo;
 
 import cloud.tianai.captcha.common.constant.CaptchaTypeConstant;
-import cloud.tianai.captcha.generator.common.constant.SliderCaptchaConstant;
+import cloud.tianai.captcha.generator.impl.StandardRotateImageCaptchaGenerator;
 import cloud.tianai.captcha.generator.impl.StandardSliderImageCaptchaGenerator;
 import cloud.tianai.captcha.resource.common.model.dto.Resource;
 import cloud.tianai.captcha.resource.common.model.dto.ResourceMap;
-import cloud.tianai.captcha.resource.impl.DefaultResourceStore;
+import cloud.tianai.captcha.resource.impl.LocalMemoryResourceStore;
 import cloud.tianai.captcha.resource.impl.provider.ClassPathResourceProvider;
 import org.springframework.stereotype.Component;
 
-import static cloud.tianai.captcha.generator.impl.StandardSliderImageCaptchaGenerator.DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH;
+import static cloud.tianai.captcha.common.constant.CommonConstant.DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH;
+
 
 /**
  * @Author: 天爱有情
@@ -17,21 +18,21 @@ import static cloud.tianai.captcha.generator.impl.StandardSliderImageCaptchaGene
  * @Description 负责模板和背景图存储的地方
  */
 @Component
-public class MyResourceStore extends DefaultResourceStore {
+public class MyResourceStore extends LocalMemoryResourceStore {
 
     public MyResourceStore() {
 
         // 滑块验证码 模板 (系统内置)
         ResourceMap template1 = new ResourceMap("default",4);
-        template1.put(SliderCaptchaConstant.TEMPLATE_ACTIVE_IMAGE_NAME, new Resource(ClassPathResourceProvider.NAME, DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH.concat("/1/active.png")));
-        template1.put(SliderCaptchaConstant.TEMPLATE_FIXED_IMAGE_NAME, new Resource(ClassPathResourceProvider.NAME, DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH.concat("/1/fixed.png")));
+        template1.put(StandardSliderImageCaptchaGenerator.TEMPLATE_ACTIVE_IMAGE_NAME, new Resource(ClassPathResourceProvider.NAME, DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH.concat("/1/active.png")));
+        template1.put(StandardSliderImageCaptchaGenerator.TEMPLATE_FIXED_IMAGE_NAME, new Resource(ClassPathResourceProvider.NAME, DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH.concat("/1/fixed.png")));
         ResourceMap template2 = new ResourceMap("default",4);
-        template2.put(SliderCaptchaConstant.TEMPLATE_ACTIVE_IMAGE_NAME, new Resource(ClassPathResourceProvider.NAME, DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH.concat("/2/active.png")));
-        template2.put(SliderCaptchaConstant.TEMPLATE_FIXED_IMAGE_NAME, new Resource(ClassPathResourceProvider.NAME, DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH.concat("/2/fixed.png")));
+        template2.put(StandardSliderImageCaptchaGenerator.TEMPLATE_ACTIVE_IMAGE_NAME, new Resource(ClassPathResourceProvider.NAME, DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH.concat("/2/active.png")));
+        template2.put(StandardSliderImageCaptchaGenerator.TEMPLATE_FIXED_IMAGE_NAME, new Resource(ClassPathResourceProvider.NAME, DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH.concat("/2/fixed.png")));
         // 旋转验证码 模板 (系统内置)
         ResourceMap template3 = new ResourceMap("default",4);
-        template3.put(SliderCaptchaConstant.TEMPLATE_ACTIVE_IMAGE_NAME, new Resource(ClassPathResourceProvider.NAME, StandardSliderImageCaptchaGenerator.DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH.concat("/3/active.png")));
-        template3.put(SliderCaptchaConstant.TEMPLATE_FIXED_IMAGE_NAME, new Resource(ClassPathResourceProvider.NAME, StandardSliderImageCaptchaGenerator.DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH.concat("/3/fixed.png")));
+        template3.put(StandardRotateImageCaptchaGenerator.TEMPLATE_ACTIVE_IMAGE_NAME, new Resource(ClassPathResourceProvider.NAME, DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH.concat("/3/active.png")));
+        template3.put(StandardRotateImageCaptchaGenerator.TEMPLATE_FIXED_IMAGE_NAME, new Resource(ClassPathResourceProvider.NAME, DEFAULT_SLIDER_IMAGE_TEMPLATE_PATH.concat("/3/fixed.png")));
 
         // 1. 添加一些模板
         addTemplate(CaptchaTypeConstant.SLIDER, template1);
