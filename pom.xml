@@ -40,6 +40,11 @@
             <artifactId>tianai-captcha-springboot-starter</artifactId>
             <version>1.5.1</version>
         </dependency>
+        <dependency>
+            <groupId>cloud.tianai.captcha</groupId>
+            <artifactId>tianai-captcha</artifactId>
+            <version>1.5.2</version>
+        </dependency>
     </dependencies>
 
     <build>
