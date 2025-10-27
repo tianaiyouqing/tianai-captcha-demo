@@ -17,8 +17,6 @@ captcha:
   init-default-resource: true
   local-cache-enabled: true
   local-cache-size: 20
-  font-path:
-    - classpath:META-INF/fonts/SIMSUN.TTC
 
 cors:
   controlAllowHeaders: "*"

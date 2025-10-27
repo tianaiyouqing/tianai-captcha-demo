@@ -2,7 +2,6 @@ package cloud.tianai.captcha.demo;
 
 
 import cloud.tianai.captcha.application.ImageCaptchaApplication;
-import cloud.tianai.captcha.application.vo.CaptchaResponse;
 import cloud.tianai.captcha.application.vo.ImageCaptchaVO;
 import cloud.tianai.captcha.common.constant.CaptchaTypeConstant;
 import cloud.tianai.captcha.common.response.ApiResponse;
@@ -26,7 +25,7 @@ public class CaptchaController {
 
     @RequestMapping("/gen")
     @ResponseBody
-    public CaptchaResponse<ImageCaptchaVO> genCaptcha(HttpServletRequest request, @RequestParam(value = "type", required = false)String type) {
+    public ApiResponse<ImageCaptchaVO> genCaptcha(HttpServletRequest request, @RequestParam(value = "type", required = false)String type) {
         if (StringUtils.isBlank(type)) {
             type = CaptchaTypeConstant.SLIDER;
         }
@@ -43,7 +42,7 @@ public class CaptchaController {
             }
 
         }
-        CaptchaResponse<ImageCaptchaVO> response = imageCaptchaApplication.generateCaptcha(type);
+        ApiResponse<ImageCaptchaVO> response = imageCaptchaApplication.generateCaptcha(type);
         return response;
     }
 

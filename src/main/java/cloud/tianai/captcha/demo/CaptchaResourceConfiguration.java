@@ -1,6 +1,7 @@
 package cloud.tianai.captcha.demo;
 
 import cloud.tianai.captcha.common.constant.CaptchaTypeConstant;
+import cloud.tianai.captcha.resource.CrudResourceStore;
 import cloud.tianai.captcha.resource.ResourceStore;
 import cloud.tianai.captcha.resource.common.model.dto.Resource;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class CaptchaResourceConfiguration {
 
     @PostConstruct
     public void init() {
+        CrudResourceStore resourceStore = (CrudResourceStore) this.resourceStore;
         // 2. 添加自定义背景图片
        resourceStore.addResource(CaptchaTypeConstant.SLIDER, new Resource("classpath", "bgimages/a.jpg", "default"));
        resourceStore.addResource(CaptchaTypeConstant.SLIDER, new Resource("classpath", "bgimages/b.jpg", "default"));
