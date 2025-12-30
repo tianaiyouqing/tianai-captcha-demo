@@ -13,7 +13,7 @@ import javax.annotation.PostConstruct;
 @RequiredArgsConstructor
 public class CaptchaResourceConfiguration {
 
-    private final CrudResourceStore resourceStore;
+    private final ResourceStore resourceStore;
 
     @PostConstruct
     public void init() {
