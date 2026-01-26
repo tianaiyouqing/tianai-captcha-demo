@@ -5,6 +5,8 @@ import cloud.tianai.captcha.application.ImageCaptchaApplication;
 import cloud.tianai.captcha.application.vo.ImageCaptchaVO;
 import cloud.tianai.captcha.common.constant.CaptchaTypeConstant;
 import cloud.tianai.captcha.common.response.ApiResponse;
+import cloud.tianai.captcha.generator.common.model.dto.GenerateParam;
+import cloud.tianai.captcha.generator.common.model.dto.ParamKeyEnum;
 import cloud.tianai.captcha.spring.plugins.secondary.SecondaryVerificationApplication;
 import cloud.tianai.captcha.validator.common.model.dto.ImageCaptchaTrack;
 import lombok.Data;
@@ -42,7 +44,10 @@ public class CaptchaController {
             }
 
         }
-        ApiResponse<ImageCaptchaVO> response = imageCaptchaApplication.generateCaptcha(type);
+        GenerateParam generateParam = new GenerateParam();
+        // 要生成的验证码类型
+        generateParam.setType(type);
+        ApiResponse<ImageCaptchaVO> response = imageCaptchaApplication.generateCaptcha(generateParam);
         return response;
     }
 

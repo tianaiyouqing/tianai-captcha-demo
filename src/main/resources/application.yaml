@@ -18,6 +18,7 @@ captcha:
   local-cache-enabled: true
   local-cache-size: 20
 
+
 cors:
   controlAllowHeaders: "*"
   controlAllowMethods: "*"
